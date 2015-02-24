@@ -1,0 +1,24 @@
+{
+  "name": "graphite-cli",
+  "version": "1.0.0",
+  "description": "a simple wrapper for making http calls to graphite",
+  "repository": "raine/graphite-cli",
+  "bin": {
+    "graphite": "./bin/graphite"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "LiveScript": "^1.3.1",
+    "mocha": "^2.1.0"
+  },
+  "dependencies": {
+    "concat-stream": "^1.4.7",
+    "debug": "^2.1.1",
+    "minimist": "^1.1.0",
+    "request": "^2.53.0"
+  }
+}
