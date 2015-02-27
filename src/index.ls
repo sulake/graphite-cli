@@ -29,11 +29,11 @@ format-raw-json = stringify . JSON.parse
 
 target = argv._.0 or argv.target or do ->
   console.log <|
-  """
+  '''
   error: no --target given
   example: graphite --target="randomWalk(\'randomWalk\')"
   read more at http://graphite.readthedocs.org/en/latest/render_api.html#target
-  """
+  '''
 
   exit 1
 
