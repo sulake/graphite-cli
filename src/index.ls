@@ -46,14 +46,14 @@ function make-call target, from
       target
     }
 
-  # TODO: opt -- only print values
-  req = request req-opts
-  req.pipe process.stdout
+  (err, res, body) <- request req-opts
 
-  debug req.uri.href
+  debug res.request.uri.href
   debug req-opts.qs
+  debug { res.status-code, content-length: res.headers.'content-length' }
 
-  req.on \response (res) ->
-    debug { res.status-code, content-length: res.headers.'content-length' }
+  unless err
     if res.headers.'content-length' is '0'
       console.log 'empty response'
+    else
+      console.log body.trim!
