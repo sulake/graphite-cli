@@ -1,12 +1,17 @@
+{pipe, merge, omit} = require 'ramda'
+
 request  = require 'request'
 concat   = require 'concat-stream'
 debug    = require 'debug' <| 'graphite'
 minimist = require 'minimist'
 {exit}   = process
-argv     = minimist process.argv.slice(2),
+url      = require 'url'
+
+argv = minimist process.argv.slice(2),
   alias:
     s: \stdin
     p: \print-query
+    i: \image-url
 
 unless process.env.GRAPHITE_URL
   console.log 'error: set GRAPHITE_URL to env'
@@ -42,18 +47,25 @@ function main target, from
     process.stdout.write target
     exit 0
 
-  req-opts = 
-    uri: "#graphite-base-url/render"
-    qs: {
-      +raw-data
+  url-obj = merge (url.parse graphite-base-url), do
+    pathname: \render
+    query: {
+      format: \raw
       from
       target
     }
 
-  (err, res, body) <- request req-opts
+  if argv.'image-url'
+    console.log <|
+      url.format merge url-obj, do
+        query: omit <[ format ]> url-obj.query
+
+    exit 0
+
+  (err, res, body) <- request do
+    uri: url.format url-obj
 
   debug res.request.uri.href
-  debug req-opts.qs
   debug { res.status-code, content-length: res.headers.'content-length' }
 
   if err
