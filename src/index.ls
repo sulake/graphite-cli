@@ -21,9 +21,6 @@ unless process.env.GRAPHITE_URL
 graphite-base-url = process.env.GRAPHITE_URL
   .replace // /?$ //, ''
 
-get-values = ->
-  it.split('|')[*-1]
-
 stringify       = JSON.stringify _, void, 4
 format-raw-json = stringify . JSON.parse
 
