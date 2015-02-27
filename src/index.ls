@@ -1,25 +1,57 @@
-{pipe, merge, omit, I, trim, apply} = require 'ramda'
+{pipe, merge, omit, I, trim, apply, empty} = require 'ramda'
 
 request  = require 'request'
 concat   = require 'concat-stream'
 debug    = require 'debug' <| 'graphite'
-minimist = require 'minimist'
-{exit}   = process
 url      = require 'url'
-
-argv = minimist process.argv.slice(2),
-  alias:
-    s: \stdin
-    p: \print-query
-    i: \image-url
-    f: \format
-
-stringify       = JSON.stringify _, void, 4
-format-raw-json = stringify . JSON.parse
+VERSION  = require '../package.json' .version
+{exit}   = process
 
 error = ->
   apply console.error, arguments
   exit 1
+
+stringify       = JSON.stringify _, void, 4
+format-raw-json = stringify . JSON.parse
+
+optionator = require 'optionator' <| do
+  prepend: 'Usage: graphite [options]'
+  append: "Version #VERSION"
+  options:
+    * option      : \target
+      alias       : \t
+      type        : \String
+      description : 'target/query'
+      required    : true
+    * option      : \from
+      alias       : \f
+      type        : \String
+      description : 'interval (e.g. "-5min")'
+    * option      : \stdin
+      alias       : \s
+      type        : \Boolean
+      description : 'read target/query from stdin'
+    * option      : \output-format
+      alias       : \o
+      type        : \String
+      description : 'output format (json, csv, raw)'
+    * option      : \help
+      alias       : \h
+      type        : \Boolean
+      description : 'displays help'
+    * option      : \print-query
+      alias       : \p
+      type        : \Boolean
+      description : 'print target/query'
+    * option      : \image-url
+      alias       : \i
+      type        : \Boolean
+      description : 'print image graph URL'
+
+try
+  argv = optionator.parse process.argv
+catch
+  error [e.message, optionator.generate-help!] * "\n\n"
 
 unless process.env.GRAPHITE_URL
   error 'error: set GRAPHITE_URL to env'
@@ -27,19 +59,11 @@ unless process.env.GRAPHITE_URL
 graphite-base-url = process.env.GRAPHITE_URL
   .replace // /?$ //, ''
 
-target = argv._.0 or argv.target or do ->
-  error <|
-    '''
-    error: no --target given
-    example: graphite --target="randomWalk(\'randomWalk\')"
-    read more at http://graphite.readthedocs.org/en/latest/render_api.html#target
-    '''
-
 from = argv.from
 run-main = main _, from
 
 unless argv.stdin
-  run-main target
+  run-main argv.target
 else
   process.stdin.pipe concat { encoding: 'string' } (input) ->
     run-main input.trim!
