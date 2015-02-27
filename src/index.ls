@@ -3,6 +3,7 @@ concat   = require 'concat-stream'
 debug    = require 'debug' <| 'graphite'
 minimist = require 'minimist'
 {pipe}   = require 'ramda'
+{exit}   = process
 argv     = minimist process.argv.slice(2),
   alias:
     s: \stdin
@@ -11,7 +12,7 @@ argv     = minimist process.argv.slice(2),
 
 unless process.env.GRAPHITE_URL
   console.log 'error: set GRAPHITE_URL to env'
-  process.exit 1
+  exit 1
 
 graphite-base-url = process.env.GRAPHITE_URL
   .replace // /?$ //, ''
@@ -27,7 +28,7 @@ target = argv._.0 or argv.target or do ->
   read more at http://graphite.readthedocs.org/en/latest/render_api.html#target
   """
 
-  process.exit 1
+  exit 1
 
 from = argv.from
 call = make-call _, from
@@ -41,7 +42,7 @@ else
 function make-call target, from
   if argv.'print-query'
     process.stdout.write target
-    process.exit 0
+    exit 0
 
   req-opts = 
     uri: "#graphite-base-url/render"
@@ -59,7 +60,7 @@ function make-call target, from
 
   if err
     console.log 'something went wrong', err
-    process.exit 1
+    exit 1
 
   if res.headers.'content-length' is '0'
     console.log 'empty response'
