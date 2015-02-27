@@ -9,7 +9,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "author": "Raine Virta <raine.virta@sulake.com>",
   "license": "ISC",
   "devDependencies": {
     "LiveScript": "^1.3.1",
