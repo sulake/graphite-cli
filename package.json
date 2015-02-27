@@ -16,6 +16,7 @@
     "mocha": "^2.1.0"
   },
   "dependencies": {
+    "chalk": "^1.0.0",
     "concat-stream": "^1.4.7",
     "debug": "^2.1.1",
     "optionator": "^0.5.0",

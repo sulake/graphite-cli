@@ -5,6 +5,7 @@ concat   = require 'concat-stream'
 debug    = require 'debug' <| 'graphite'
 url      = require 'url'
 VERSION  = require '../package.json' .version
+chalk    = require 'chalk'
 {exit}   = process
 
 error = ->
@@ -49,12 +50,12 @@ optionator = require 'optionator' <| do
       description : 'print image graph URL'
 
 try
+  unless process.env.GRAPHITE_URL
+    throw new Error chalk.red.bold 'Error: set GRAPHITE_URL to env'
+
   argv = optionator.parse process.argv
 catch
-  error [optionator.generate-help!, e.message] * "\n\n"
-
-unless process.env.GRAPHITE_URL
-  error 'error: set GRAPHITE_URL to env'
+  error [optionator.generate-help!, chalk.bold e.message] * "\n\n"
 
 graphite-base-url = process.env.GRAPHITE_URL
   .replace // /?$ //, ''
