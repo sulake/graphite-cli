@@ -14,25 +14,26 @@ argv = minimist process.argv.slice(2),
     i: \image-url
     f: \format
 
-unless process.env.GRAPHITE_URL
-  console.log 'error: set GRAPHITE_URL to env'
+stringify       = JSON.stringify _, void, 4
+format-raw-json = stringify . JSON.parse
+
+die = (msg) ->
+  console.error msg
   exit 1
+
+unless process.env.GRAPHITE_URL
+  die 'error: set GRAPHITE_URL to env'
 
 graphite-base-url = process.env.GRAPHITE_URL
   .replace // /?$ //, ''
 
-stringify       = JSON.stringify _, void, 4
-format-raw-json = stringify . JSON.parse
-
 target = argv._.0 or argv.target or do ->
-  console.log <|
+  die <|
   '''
   error: no --target given
   example: graphite --target="randomWalk(\'randomWalk\')"
   read more at http://graphite.readthedocs.org/en/latest/render_api.html#target
   '''
-
-  exit 1
 
 from = argv.from
 run-main = main _, from
@@ -69,9 +70,7 @@ function main target, from
   debug res.request.uri.href
   debug { res.status-code, content-length: res.headers.'content-length' }
 
-  if err
-    console.log 'something went wrong', err
-    exit 1
+  if err then die 'something went wrong', err
 
   if res.headers.'content-length' is '0'
     console.log 'empty response'
