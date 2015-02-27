@@ -8,22 +8,30 @@ argv     = minimist process.argv.slice(2),
     p: \print-query
 
 unless process.env.GRAPHITE_URL
-  console.log "error: set GRAPHITE_URL to env"
+  console.log 'error: set GRAPHITE_URL to env'
   process.exit 1
 
 graphite-base-url = process.env.GRAPHITE_URL
   .replace // /?$ //, ''
 
-target = argv._.0 or argv.target
-from   = argv.from
+target = argv._.0 or argv.target or do ->
+  console.log <|
+  """
+  error: no --target given
+  example: graphite --target="randomWalk(\'randomWalk\')"
+  read more at http://graphite.readthedocs.org/en/latest/render_api.html#target
+  """
 
+  process.exit 1
+
+from = argv.from
 call = make-call _, from
 
 unless argv.stdin
   call target
 else
-  process.stdin.pipe concat { encoding: 'string' } ->
-    call it.trim!
+  process.stdin.pipe concat { encoding: 'string' } (input) ->
+    call input.trim!
 
 function make-call target, from
   if argv.'print-query'
