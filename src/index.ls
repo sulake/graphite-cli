@@ -2,13 +2,11 @@ request  = require 'request'
 concat   = require 'concat-stream'
 debug    = require 'debug' <| 'graphite'
 minimist = require 'minimist'
-{pipe}   = require 'ramda'
 {exit}   = process
 argv     = minimist process.argv.slice(2),
   alias:
     s: \stdin
     p: \print-query
-    v: \values
 
 unless process.env.GRAPHITE_URL
   console.log 'error: set GRAPHITE_URL to env'
@@ -65,8 +63,5 @@ function main target, from
   if res.headers.'content-length' is '0'
     console.log 'empty response'
   else
-    ops = [ -> it.trim! ]
-    ops := ops ++ get-values if argv.values
-
-    (pipe ...ops) body
-    |> console.log
+    trim = -> it.trim!
+    trim body |> console.log
