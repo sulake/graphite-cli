@@ -51,7 +51,7 @@ optionator = require 'optionator' <| do
 try
   argv = optionator.parse process.argv
 catch
-  error [e.message, optionator.generate-help!] * "\n\n"
+  error [optionator.generate-help!, e.message] * "\n\n"
 
 unless process.env.GRAPHITE_URL
   error 'error: set GRAPHITE_URL to env'
