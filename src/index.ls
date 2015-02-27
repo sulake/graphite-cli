@@ -21,7 +21,7 @@ optionator = require 'optionator' <| do
     * option      : \target
       alias       : \t
       type        : \String
-      description : 'target/query'
+      description : 'target'
       required    : true
     * option      : \from
       alias       : \f
@@ -30,7 +30,7 @@ optionator = require 'optionator' <| do
     * option      : \stdin
       alias       : \s
       type        : \Boolean
-      description : 'read target/query from stdin'
+      description : 'read target'
     * option      : \output-format
       alias       : \o
       type        : \String
@@ -39,10 +39,10 @@ optionator = require 'optionator' <| do
       alias       : \h
       type        : \Boolean
       description : 'displays help'
-    * option      : \print-query
+    * option      : \print-target
       alias       : \p
       type        : \Boolean
-      description : 'print target/query'
+      description : 'print target'
     * option      : \image-url
       alias       : \i
       type        : \Boolean
@@ -69,7 +69,7 @@ else
     run-main input.trim!
 
 function main target, from
-  if argv.'print-query'
+  if argv.'print-target'
     process.stdout.write target
     exit 0
 
