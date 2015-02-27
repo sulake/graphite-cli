@@ -31,15 +31,15 @@ target = argv._.0 or argv.target or do ->
   exit 1
 
 from = argv.from
-call = make-call _, from
+run-main = main _, from
 
 unless argv.stdin
-  call target
+  run-main target
 else
   process.stdin.pipe concat { encoding: 'string' } (input) ->
-    call input.trim!
+    run-main input.trim!
 
-function make-call target, from
+function main target, from
   if argv.'print-query'
     process.stdout.write target
     exit 0
