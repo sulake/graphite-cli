@@ -2,10 +2,12 @@ request  = require 'request'
 concat   = require 'concat-stream'
 debug    = require 'debug' <| 'graphite'
 minimist = require 'minimist'
+{pipe}   = require 'ramda'
 argv     = minimist process.argv.slice(2),
   alias:
     s: \stdin
     p: \print-query
+    v: \values
 
 unless process.env.GRAPHITE_URL
   console.log 'error: set GRAPHITE_URL to env'
@@ -13,6 +15,9 @@ unless process.env.GRAPHITE_URL
 
 graphite-base-url = process.env.GRAPHITE_URL
   .replace // /?$ //, ''
+
+get-values = ->
+  it.split('|')[*-1]
 
 target = argv._.0 or argv.target or do ->
   console.log <|
@@ -52,8 +57,15 @@ function make-call target, from
   debug req-opts.qs
   debug { res.status-code, content-length: res.headers.'content-length' }
 
-  unless err
-    if res.headers.'content-length' is '0'
-      console.log 'empty response'
-    else
-      console.log body.trim!
+  if err
+    console.log 'something went wrong', err
+    process.exit 1
+
+  if res.headers.'content-length' is '0'
+    console.log 'empty response'
+  else
+    ops = [ -> it.trim! ]
+    ops := ops ++ get-values if argv.values
+
+    (pipe ...ops) body
+    |> console.log
