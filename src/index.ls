@@ -12,6 +12,7 @@ argv = minimist process.argv.slice(2),
     s: \stdin
     p: \print-query
     i: \image-url
+    f: \format
 
 unless process.env.GRAPHITE_URL
   console.log 'error: set GRAPHITE_URL to env'
@@ -50,7 +51,7 @@ function main target, from
   url-obj = merge (url.parse graphite-base-url), do
     pathname: \render
     query: {
-      format: \raw
+      format: argv.format or \raw
       from
       target
     }
