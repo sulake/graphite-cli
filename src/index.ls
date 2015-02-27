@@ -1,4 +1,4 @@
-{pipe, merge, omit} = require 'ramda'
+{pipe, merge, omit, I, trim} = require 'ramda'
 
 request  = require 'request'
 concat   = require 'concat-stream'
@@ -23,6 +23,9 @@ graphite-base-url = process.env.GRAPHITE_URL
 
 get-values = ->
   it.split('|')[*-1]
+
+stringify       = JSON.stringify _, void, 4
+format-raw-json = stringify . JSON.parse
 
 target = argv._.0 or argv.target or do ->
   console.log <|
@@ -76,5 +79,9 @@ function main target, from
   if res.headers.'content-length' is '0'
     console.log 'empty response'
   else
-    trim = -> it.trim!
-    trim body |> console.log
+    format-output = pipe do
+      trim,
+      argv.format is \json and format-raw-json or I
+
+    console.log <|
+      format-output body
