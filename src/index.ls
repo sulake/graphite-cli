@@ -35,7 +35,7 @@ optionator = require 'optionator' <| do
       type        : \Boolean
       description : 'read target from stdin'
       overrideRequired: true
-    * option      : \output-format
+    * option      : \format
       alias       : \o
       type        : \String
       description : 'output format (json, csv, raw)'
