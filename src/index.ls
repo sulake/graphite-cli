@@ -6,6 +6,7 @@ debug    = require 'debug' <| 'graphite'
 url      = require 'url'
 VERSION  = require '../package.json' .version
 chalk    = require 'chalk'
+open     = require 'open'
 {exit}   = process
 
 error = ->
@@ -49,6 +50,10 @@ optionator = require 'optionator' <| do
       alias       : \i
       type        : \Boolean
       description : 'print image graph URL'
+    * option      : \browser
+      alias       : \b
+      type        : \Boolean
+      description : 'open as image in browser'
 
 try
   unless process.env.GRAPHITE_URL
@@ -83,8 +88,9 @@ function main target, from
       target
     }
 
-  if argv.'image-url'
-    console.log <|
+  if argv.'image-url' or argv.'browser'
+    method = (argv.'browser' and open) or console.log
+    method <|
       url.format merge url-obj, do
         query: omit <[ format ]> url-obj.query
 
