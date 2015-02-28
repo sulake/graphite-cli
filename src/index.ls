@@ -32,6 +32,7 @@ optionator = require 'optionator' <| do
       alias       : \s
       type        : \Boolean
       description : 'read target from stdin'
+      overrideRequired: true
     * option      : \output-format
       alias       : \o
       type        : \String
