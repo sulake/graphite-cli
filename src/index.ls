@@ -38,10 +38,6 @@ optionator = require 'optionator' <| do
       alias       : \o
       type        : \String
       description : 'output format (json, csv, raw)'
-    * option      : \help
-      alias       : \h
-      type        : \Boolean
-      description : 'displays help'
     * option      : \print-target
       alias       : \p
       type        : \Boolean
@@ -54,6 +50,10 @@ optionator = require 'optionator' <| do
       alias       : \b
       type        : \Boolean
       description : 'open as image in browser'
+    * option      : \help
+      alias       : \h
+      type        : \Boolean
+      description : 'displays help'
 
 try
   unless process.env.GRAPHITE_URL
