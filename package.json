@@ -7,7 +7,7 @@
     "graphite": "./bin/graphite"
   },
   "author": "Raine Virta <raine.virta@sulake.com>",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "LiveScript": "^1.3.1",
     "mocha": "^2.1.0"
