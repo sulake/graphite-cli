@@ -17,6 +17,14 @@ Usage: graphite [options]
   -h, --help                  displays help
 ```
 
+### setup
+
+`graphite-cli` reads URL to graphite from `GRAPHITE_URL` environment variable
+
+```sh
+$ export GRAPHITE_URL=http://graphite
+```
+
 ### examples
 
 get data for a random walk as JSON for last 5 minutes
