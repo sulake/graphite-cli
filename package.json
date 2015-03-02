@@ -2,7 +2,7 @@
   "name": "graphite-cli",
   "version": "0.1.0",
   "description": "a simple tool for making http calls to graphite",
-  "repository": "raine/graphite-cli",
+  "repository": "sulake/graphite-cli",
   "bin": {
     "graphite": "./bin/graphite"
   },
