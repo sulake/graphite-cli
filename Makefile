@@ -40,3 +40,5 @@ test: compile
 	@$(MOCHA) \
 		--timeout 20000 \
 		--compilers ls:LiveScript \
+		--require ./test/_globals.ls \
+		--recursive

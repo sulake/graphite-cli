@@ -1,14 +1,15 @@
 {pipe, merge, omit, I, trim, apply, empty, head} = require 'ramda'
 
-request = require 'request'
-concat  = require 'concat-stream'
-debug   = require 'debug' <| 'graphite'
-url     = require 'url'
-VERSION = require '../package.json' .version
-chalk   = require 'chalk'
-open    = require 'open'
-fs      = require 'fs'
-{exit}  = process
+request          = require 'request'
+concat           = require 'concat-stream'
+debug            = require 'debug' <| 'graphite'
+url              = require 'url'
+VERSION          = require '../package.json' .version
+chalk            = require 'chalk'
+open             = require 'open'
+fs               = require 'fs'
+expand-abbr-time = require './expand-abbr-time'
+{exit}           = process
 
 error = ->
   apply console.error, arguments
@@ -74,6 +75,7 @@ run-main = main _, from
 target = argv.target or do
   size = fs.fstat-sync process.stdin.fd .size
   trim head fs.read-sync process.stdin.fd, size
+|> expand-abbr-time
 
 main target, from
 
