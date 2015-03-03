@@ -84,11 +84,7 @@ function main target, from
     process.stdout.write target
     exit 0
 
-  params = {
-    from
-    target
-  }
-
+  params = { from, target }
   url-obj = merge (url.parse graphite-base-url),
     pathname: \render
 
