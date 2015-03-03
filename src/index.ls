@@ -82,27 +82,33 @@ function main target, from
     process.stdout.write target
     exit 0
 
-  url-obj = merge (url.parse graphite-base-url), do
+  params = {
+    from
+    target
+  }
+
+  url-obj = merge (url.parse graphite-base-url),
     pathname: \render
-    query: {
-      format: argv.format or \raw
-      from
-      target
-    }
 
   if argv.image-url or argv.browser
-    method = (argv.browser and open) or console.log
-    method <|
-      url.format merge url-obj, do
-        query: omit <[ format ]> url-obj.query
-
+    action = (argv.browser and open) or console.log
+    action url.format merge url-obj, query: params
     exit 0
 
-  (err, res, body) <- request do
+  (err, res, body) <- request.post do
     uri: url.format url-obj
+    form: merge params,
+      format: argv.format or \raw
 
-  debug res.request.uri.href
-  debug { res.status-code, content-length: res.headers.'content-length' }
+  debug {
+    uri  : res.request.uri.href
+    data : res.request.body.to-string!
+  }
+
+  debug {
+    res.status-code,
+    content-length: res.headers.'content-length'
+  }
 
   if err then error 'something went wrong', err
 
