@@ -1,13 +1,14 @@
-{pipe, merge, omit, I, trim, apply, empty} = require 'ramda'
+{pipe, merge, omit, I, trim, apply, empty, head} = require 'ramda'
 
-request  = require 'request'
-concat   = require 'concat-stream'
-debug    = require 'debug' <| 'graphite'
-url      = require 'url'
-VERSION  = require '../package.json' .version
-chalk    = require 'chalk'
-open     = require 'open'
-{exit}   = process
+request = require 'request'
+concat  = require 'concat-stream'
+debug   = require 'debug' <| 'graphite'
+url     = require 'url'
+VERSION = require '../package.json' .version
+chalk   = require 'chalk'
+open    = require 'open'
+fs      = require 'fs'
+{exit}  = process
 
 error = ->
   apply console.error, arguments
@@ -70,11 +71,11 @@ graphite-base-url = process.env.GRAPHITE_URL
 from = argv.from
 run-main = main _, from
 
-unless argv.stdin
-  run-main argv.target
-else
-  process.stdin.pipe concat { encoding: 'string' } (input) ->
-    run-main input.trim!
+target = argv.target or do
+  size = fs.fstat-sync process.stdin.fd .size
+  trim head fs.read-sync process.stdin.fd, size
+
+main target, from
 
 function main target, from
   if argv.print-target
