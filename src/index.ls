@@ -77,7 +77,7 @@ else
     run-main input.trim!
 
 function main target, from
-  if argv.'print-target'
+  if argv.print-target
     process.stdout.write target
     exit 0
 
@@ -89,8 +89,8 @@ function main target, from
       target
     }
 
-  if argv.'image-url' or argv.'browser'
-    method = (argv.'browser' and open) or console.log
+  if argv.image-url or argv.browser
+    method = (argv.browser and open) or console.log
     method <|
       url.format merge url-obj, do
         query: omit <[ format ]> url-obj.query
