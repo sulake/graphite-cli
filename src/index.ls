@@ -1,7 +1,6 @@
 {pipe, merge, omit, I, trim, apply, empty, head} = require 'ramda'
 
 request          = require 'request'
-concat           = require 'concat-stream'
 debug            = require 'debug' <| 'graphite'
 url              = require 'url'
 VERSION          = require '../package.json' .version
