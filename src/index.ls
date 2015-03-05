@@ -29,7 +29,7 @@ optionator = require 'optionator' <| do
     * option      : \from
       alias       : \f
       type        : \String
-      description : 'interval (default: -1day)'
+      description : 'interval'
       default     : \-1day
     * option      : \stdin
       alias       : \s
