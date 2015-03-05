@@ -45,3 +45,10 @@ read target from clipboard and open the graph in browser
 ```sh
 $ pbpaste | graphite -s -b
 ```
+
+print graph image url of `target` piped to stdin
+
+```sh
+$ echo "randomWalk('randomWalk')" | graphite -s -i
+https://graphite/render?from=-1day&target=randomWalk('randomWalk')
+```
