@@ -1,5 +1,7 @@
 # graphite-cli
 
+makes requests to graphite's `/render` API
+
 ```sh
 $ npm install -g graphite-cli
 ```
