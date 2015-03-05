@@ -32,7 +32,12 @@ $ export GRAPHITE_URL=http://graphite
 get data for a random walk as JSON for last 5 minutes
 
 ```sh
-$ graphite --from=-5m --target="randomWalk('randomWalk')" -o json
+$ graphite --from=-5min --target="randomWalk('randomWalk')" -o csv
+randomWalk,2015-03-05 15:32:03,0
+randomWalk,2015-03-05 15:33:03,0.21089740446196048
+randomWalk,2015-03-05 15:34:03,0.30473267268105897
+randomWalk,2015-03-05 15:35:03,0.5150866652261553
+randomWalk,2015-03-05 15:36:03,0.2311229472001599
 ```
 
 read target from clipboard and open the graph in browser
