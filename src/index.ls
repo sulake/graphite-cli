@@ -4,16 +4,17 @@ request          = require 'request'
 debug            = require 'debug' <| 'graphite'
 url              = require 'url'
 VERSION          = require '../package.json' .version
-chalk            = require 'chalk'
+{red}            = require 'chalk'
 open             = require 'open'
 fs               = require 'fs'
 expand-abbr-time = require './expand-abbr-time'
 {exit}           = process
 
-error = ->
+die = ->
   apply console.error, arguments
   exit 1
 
+fmt-error       = -> (red.bold 'ERROR: ') + red it
 stringify       = JSON.stringify _, void, 4
 format-raw-json = stringify . JSON.parse
 
@@ -59,11 +60,11 @@ optionator = require 'optionator' <| do
 
 try
   unless process.env.GRAPHITE_URL
-    throw new Error chalk.red.bold 'Error: set GRAPHITE_URL to env'
+    throw new Error fmt-error 'set GRAPHITE_URL to env'
 
   argv = optionator.parse process.argv
 catch
-  error [optionator.generate-help!, chalk.bold e.message] * "\n\n"
+  die [optionator.generate-help!, e.message] * "\n\n"
 
 graphite-base-url = process.env.GRAPHITE_URL
   .replace // /?$ //, ''
@@ -97,6 +98,8 @@ function main target, from
     form: merge params,
       format: argv.format or \raw
 
+  if err then die fmt-error err.message
+
   debug {
     uri  : res.request.uri.href
     data : res.request.body.to-string!
@@ -106,8 +109,6 @@ function main target, from
     res.status-code,
     content-length: res.headers.'content-length'
   }
-
-  if err then error 'something went wrong', err
 
   if res.headers.'content-length' is '0'
     console.log 'empty response'
