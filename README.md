@@ -50,5 +50,5 @@ print graph image url of `target` piped to stdin
 
 ```sh
 $ echo "randomWalk('randomWalk')" | graphite -s -i
-https://graphite/render?from=-1day&target=randomWalk('randomWalk')
+http://graphite/render?from=-1day&target=randomWalk('randomWalk')
 ```
