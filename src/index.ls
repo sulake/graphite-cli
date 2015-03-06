@@ -48,7 +48,7 @@ optionator = require 'optionator' <| do
     * option      : \image-url
       alias       : \i
       type        : \Boolean
-      description : 'print image graph URL'
+      description : 'print graph image URL'
     * option      : \browser
       alias       : \b
       type        : \Boolean
