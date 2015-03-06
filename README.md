@@ -9,14 +9,15 @@ $ npm install -g graphite-cli
 ```
 Usage: graphite [options]
 
-  -t, --target String         target
-  -f, --from String           interval (default: -1day)
-  -s, --stdin                 read target from stdin
-  -o, --format String         output format (json, csv, raw)
-  -p, --print-target          print target
-  -i, --image-url             print image graph URL
-  -b, --browser               open as image in browser
-  -h, --help                  displays help
+  -t, --target String  target
+  -f, --from String    interval - default: -1day
+  -s, --stdin          read target from stdin
+  -o, --format String  output format (json, csv, raw)
+  -p, --print-target   print target
+  -i, --image-url      print graph image URL
+  -b, --browser        open as image in browser
+  -c, --curl           send graph image data to stdout
+  -h, --help           displays help
 ```
 
 ### setup
