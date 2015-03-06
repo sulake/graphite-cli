@@ -53,6 +53,10 @@ optionator = require 'optionator' <| do
       alias       : \b
       type        : \Boolean
       description : 'open as image in browser'
+    * option      : \curl
+      alias       : \c
+      type        : \Boolean
+      description : 'send graph image data to stdout'
     * option      : \help
       alias       : \h
       type        : \Boolean
@@ -88,10 +92,16 @@ function main target, from
   url-obj = merge (url.parse graphite-base-url),
     pathname: \render
 
-  if argv.image-url or argv.browser
-    action = (argv.browser and open) or console.log
+  curl = ->
+    request it .pipe process.stdout
+
+  if argv.image-url or argv.browser or argv.curl
+    action = switch
+    | argv.browser   => open
+    | argv.curl      => curl
+    | argv.image-url => console~log
     action url.format merge url-obj, query: params
-    exit 0
+    return
 
   (err, res, body) <- request.post do
     uri: url.format url-obj
@@ -100,15 +110,11 @@ function main target, from
 
   if err then die fmt-error err.message
 
-  debug {
-    uri  : res.request.uri.href
-    data : res.request.body.to-string!
-  }
-
-  debug {
-    res.status-code,
+  debug do
+    uri:            res.request.uri.href
+    data:           res.request.body.to-string!
+    status-code:    res.status-code
     content-length: res.headers.'content-length'
-  }
 
   if res.headers.'content-length' is '0'
     console.log 'empty response'
