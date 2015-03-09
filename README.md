@@ -20,7 +20,7 @@ Usage: graphite [options]
   -h, --help           displays help
 ```
 
-### setup
+## setup
 
 `graphite-cli` reads URL to graphite from `GRAPHITE_URL` environment variable
 
@@ -28,9 +28,9 @@ Usage: graphite [options]
 $ export GRAPHITE_URL=http://graphite
 ```
 
-### examples
+## examples
 
-get data for a random walk as JSON for last 5 minutes
+#### get data for a random walk as JSON for last 5 minutes
 
 ```sh
 $ graphite --from=-5min --target="randomWalk('randomWalk')" -o csv
@@ -41,20 +41,20 @@ randomWalk,2015-03-05 15:35:03,0.5150866652261553
 randomWalk,2015-03-05 15:36:03,0.2311229472001599
 ```
 
-read target from clipboard and open the graph in browser
+#### read target from clipboard and open the graph in browser
 
 ```sh
 $ pbpaste | graphite -s -b
 ```
 
-print graph image url of `target` piped to stdin
+#### print graph image url of `target` piped to stdin
 
 ```sh
 $ echo "randomWalk('randomWalk')" | graphite -s -i
 http://graphite/render?from=-1day&target=randomWalk('randomWalk')
 ```
 
-get status codes for last hour summarized into 10min intervals
+#### get status codes for last hour summarized into 10min intervals
 
 ```sh
 $ graphite --target="aliasByNode(summarize(counts.web.status_code.*), '10m', 'sum', false), 6)" \
