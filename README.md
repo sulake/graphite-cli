@@ -53,3 +53,21 @@ print graph image url of `target` piped to stdin
 $ echo "randomWalk('randomWalk')" | graphite -s -i
 http://graphite/render?from=-1day&target=randomWalk('randomWalk')
 ```
+
+pipe a target that gets status codes summarized by 10 minutes, print nice output
+
+```sh
+$ cat status-codes-10min | graphite -s --from=-1h | tr '|' , | cut -d',' -f1,5- | sed 's/\.0//g' | column -t -s, | sort -k1
+200  176  213  207  227  292  320  0
+201  0    0    0    0    2    0    0
+202  0    0    0    0    0    0    0
+204  0    0    1    0    0    0    0
+302  0    2    0    0    0    2    0
+304  0    0    0    0    2    4    0
+400  1    0    0    0    0    0    0
+401  0    0    0    0    0    0    0
+404  0    0    0    0    1    0    0
+409  0    0    0    0    0    0    0
+429  0    0    0    0    0    0    0
+500  0    0    0    0    0    0    0
+```
