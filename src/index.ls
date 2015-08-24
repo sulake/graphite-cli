@@ -89,8 +89,9 @@ function main target, from
     exit 0
 
   params = { from, target }
-  url-obj = merge (url.parse graphite-base-url),
-    pathname: \render
+  parsed-base-url = url.parse graphite-base-url
+  url-obj = merge parsed-base-url,
+    pathname: parsed-base-url.pathname ++ '/render'
 
   curl = ->
     request it .pipe process.stdout
