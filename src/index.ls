@@ -1,4 +1,4 @@
-{pipe, merge, omit, I, trim, apply, empty, head} = require 'ramda'
+{pipe, merge, omit, I, trim, empty, head} = require 'ramda'
 
 request          = require 'request'
 debug            = require 'debug' <| 'graphite'
@@ -8,10 +8,11 @@ VERSION          = require '../package.json' .version
 open             = require 'open'
 fs               = require 'fs'
 expand-abbr-time = require './expand-abbr-time'
+concat-stream    = require 'concat-stream'
 {exit}           = process
 
 die = ->
-  apply console.error, arguments
+  console.error ...arguments
   exit 1
 
 fmt-error       = -> (red.bold 'ERROR: ') + red it
@@ -73,17 +74,14 @@ catch
 graphite-base-url = process.env.GRAPHITE_URL
   .replace // /?$ //, ''
 
-from = argv.from
-run-main = main _, from
-
-target = argv.target or do
-  size = fs.fstat-sync process.stdin.fd .size
-  trim head fs.read-sync process.stdin.fd, size
-|> expand-abbr-time
-
-main target, from
+if argv.stdin
+  process.stdin.pipe concat-stream { encoding: 'string' }, main _, argv.from
+else
+  main argv.target, argv.from
 
 function main target, from
+  target := expand-abbr-time target
+
   if argv.print-target
     process.stdout.write target
     exit 0
