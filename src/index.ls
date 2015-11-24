@@ -1,4 +1,4 @@
-{pipe, merge, omit, I, trim, empty, head} = require 'ramda'
+{is-nil, pipe, merge, omit, I, trim, empty, head} = require 'ramda'
 
 request          = require 'request'
 debug            = require 'debug' <| 'graphite'
@@ -27,7 +27,6 @@ optionator = require 'optionator' <| do
       alias       : \t
       type        : \String
       description : 'target'
-      required    : true
     * option      : \from
       alias       : \f
       type        : \String
@@ -36,8 +35,7 @@ optionator = require 'optionator' <| do
     * option      : \stdin
       alias       : \s
       type        : \Boolean
-      description : 'read target from stdin'
-      overrideRequired: true
+      description : 'read target from stdin (default)'
     * option      : \format
       alias       : \o
       type        : \String
@@ -71,10 +69,12 @@ try
 catch
   die [optionator.generate-help!, e.message] * "\n\n"
 
+if argv.help then die optionator.generate-help!
+
 graphite-base-url = process.env.GRAPHITE_URL
   .replace // /?$ //, ''
 
-if argv.stdin
+if argv.stdin or is-nil argv.target
   process.stdin.pipe concat-stream { encoding: 'string' }, main _, argv.from
 else
   main argv.target, argv.from
