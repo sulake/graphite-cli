@@ -89,7 +89,7 @@ function main target, from
   params = { from, target }
   parsed-base-url = url.parse graphite-base-url
   url-obj = merge parsed-base-url,
-    pathname: parsed-base-url.pathname ++ '/render'
+    pathname: '/render'
 
   curl = ->
     request it .pipe process.stdout
